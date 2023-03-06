@@ -1,3 +1,3 @@
-# m5stampc3-rgb-led
+# Stamp C3 RGB LED
  
-Pressing the button on the device will cycle through colours of the RGB LED.
+Pressing the button on the device will cycle through the colours of the RGB LED.
