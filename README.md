@@ -4,7 +4,7 @@ Pressing the programmable button on the M5Stamp C3 will cycle through colours of
 
 ## Requirements
 
-* [M5Stamp C3](https://m5stack.com/products/stamp-c3)
+* [M5Stamp C3](https://shop.m5stack.com/products/m5stamp-c3-mate-with-pin-headers)
 * [Visual Studio Code](https://code.visualstudio.com/)
 * [PlatformIO extension for Visual Studio Code](https://platformio.org/install/ide?install=vscode)
 
