@@ -1,6 +1,6 @@
 # M5Stamp C3 RGB LED Demo
  
-Pressing the programmable button on the M5Stamp C3 will cycle through colours of the RGB LED.
+This is a simple demo to show how to use the RGB LED on the M5Stamp C3.
 
 ## Requirements
 
