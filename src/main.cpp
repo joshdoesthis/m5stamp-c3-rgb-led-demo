@@ -9,7 +9,8 @@ TaskHandle_t TaskHandle_Led;
 
 int buttonLastState = HIGH;
 int buttonCurrentState;
-int buttonCount = 1;
+// Shared between the two tasks, so always read it fresh from memory.
+volatile int buttonCount = 1;
 
 int high = 255;
 int mid = 128;
@@ -23,14 +24,11 @@ void buttonRead(void *pvParameters)
     if (buttonLastState == LOW && buttonCurrentState == HIGH)
     {
       Serial.println("Button Pressed!");
-      buttonCount++;
-      if (buttonCount > 6)
-      {
-        buttonCount = 1;
-      }
+      // Cycle through colours 1 to 6.
+      buttonCount = buttonCount % 6 + 1;
     }
     buttonLastState = buttonCurrentState;
-    vTaskDelay(10 / portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -63,7 +61,7 @@ void changeLedState(void *pvParameters)
       break;
     }
     pixels.show();
-    vTaskDelay(100 / portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
@@ -73,10 +71,14 @@ void setup()
   pixels.begin();
   pinMode(BUTTON, INPUT_PULLUP);
 
-  xTaskCreate(buttonRead, "buttonRead", 2048 * 1, nullptr, 128 * 10, &TaskHandle_buttonRead);
-  xTaskCreate(changeLedState, "changeLedState", 2048 * 1, nullptr, 128 * 1, &TaskHandle_Led);
+  // FreeRTOS priorities on the ESP32 go up to 24. Both tasks sit above the
+  // Arduino loop task (priority 1).
+  xTaskCreate(buttonRead, "buttonRead", 2048, nullptr, 2, &TaskHandle_buttonRead);
+  xTaskCreate(changeLedState, "changeLedState", 2048, nullptr, 2, &TaskHandle_Led);
 }
 
 void loop()
 {
+  // All the work happens in the tasks above, so the loop task isn't needed.
+  vTaskDelete(nullptr);
 }
